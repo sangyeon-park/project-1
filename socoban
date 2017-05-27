@@ -25,6 +25,8 @@ int getch(void){
 
                 go = fopen("jong.txt", "r");  //맵 열기
                 char memorize[10][10][10]; // 임시 저장공간
+                int Ocount = -1;        // O를 세기 위해, O를 찾으면, Ocount++ 에 의해 0이됨. 배열용이
+                int O[20] = {0};        // O의 위치 파악
 
 
                 while ((letter = getc(go)) != EOF){
@@ -42,6 +44,11 @@ int getch(void){
                                 row = box_row-1;
                                 line = (count+1) % box_line-2;
                         }
+                        if ( leter == 'O')
+                        {
+                                Ocount += 1;
+                                O[Ocount] = count -1;
+                                
                 }
 
                 fclose(go);
@@ -152,6 +159,8 @@ int getch(void){
                                 }
 
                                 system("clear");
+                                
+                                 
 
 
                                 for (int i = 0; i<box_row*box_line-1 ;i++){
