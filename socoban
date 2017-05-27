@@ -25,6 +25,8 @@ int getch(void){
 
                 go = fopen("jong.txt", "r");  //맵 열기
                 char memorize[10][10][10]; // 임시 저장공간
+                int Ocount = -1;
+                int O[20] = {0}; 
 
 
                 while ((letter = getc(go)) != EOF){
@@ -42,6 +44,12 @@ int getch(void){
                                 row = box_row-1;
                                 line = (count+1) % box_line-2;
                         }
+                         if (letter == 'O')
+                        {
+                            Ocount += 1;
+                            O[Ocount] = count-1;
+                        }
+
                 }
 
                 fclose(go);
@@ -152,6 +160,13 @@ int getch(void){
                                 }
 
                                 system("clear");
+                                
+                                int n;               //중간에 O의 위치 확인
+                                for(n=0;n<=Ocount;n++)
+                                {
+                                        if(player[0][O[n]] == ' ')
+                                                player [0][O[n]] = 'O';
+                                }
 
 
                                 for (int i = 0; i<box_row*box_line-1 ;i++){
