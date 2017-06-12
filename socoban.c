@@ -420,7 +420,7 @@ int main(void)
          new_count--;
          main();
       }
-      dolcount = -1;      //O도 0부터 셌기 때문에 $ 도 0부터 세기 위해
+      dolcount = -1;//O도 0부터 셌기 때문에 $ 도 0부터 세기 위해
       for(int n=0;n<=Ocount;n++){
          if(player[0][0][O[n]] == ' ' || player[0][0][O[n]] == 0)
             player[0][0][O[n]] = 'O';
