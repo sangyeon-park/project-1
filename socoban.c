@@ -207,190 +207,29 @@ void shadow(void){//undo를 위한 함수이며 이동할 때 마다 이전 배�
 
 
 
-int move(char player[6][box_row][box_line]) {
-	input_char = getch();
-	switch (input_char) {
-		case 'u' : {//undo의 역할을 하는 case이며 shadow를 거꾸로 실행한다고 생각하면 쉽다, 배열을 거꾸로 배정하여 이전의 위치로 돌아갈 수 있도록 만든다.
-				   if(before < 5){
-					   for(int i = 0; i <= box_row * box_line - 2; i++){
-						   for(int k = 0; k <= 4; k++)
-							   player[k][0][i] = player[k + 1][0][i];
-					   }
-					   for(int i = 0; i <= box_row; i++){
-						   for(int j = 0; j <= box_line; j++){
-							   if(player[0][i][j] == '@'){
-								   row = i;
-								   line = j;
-								   break;
-							   }
-						   }
-					   }
-					   before++;
-				   }
-			   }
-			   break;
-
-		case 'k':{
-				 printf("k \n");
-				 printf("도움말을 보여줍니다 \n");
-				 sleep(1);
-				 system("clear");
-				 printf("\n\n\n\nh(왼쪽), k(아래), j(위), l(오른쪽)\n");
-				 printf("u(undo)\n");
-				 printf("r(replay)\n");
-				 printf("n(new)\n");
-				 printf("e(exit)\n");
-				 printf("s(save)\n");
-				 printf("f(file load)\n");
-				 printf("k(display help)\n");
-				 printf("t(top)\n\n\n\n\n\n");
-				 printf("맵으로 돌아가실거면 아무키나 눌러주세요\n");
-
-				 getch();
-				 system("clear") ;
-
-				 map_display(player);
-
-			 }
-			 break;
-
-		case 'l' : {
-				   if(player[0][row][line+1] == '#')
-					   break;
-				   if(player[0][row][line+1] == '$')
-				   {
-					   if(player[0][row][line+2] == '#' || player[0][row][line+2] == '$')
-						   break;
-					   for(int i = 0; i <= box_row * box_line - 2; i++){
-						   for(int k = 4; k > -1; k--)
-							   player[k + 1][0][i] = player[k][0][i];
-					   }
-					   line += 1;
-					   player[0][row][line-1] = ' ';
-					   player[0][row][line] = '@';
-					   player[0][row][line+1] = '$';
-					   break;
-				   }
-				   for(int i = 0; i <= box_row * box_line - 2; i++){
-					   for(int k = 4; k > -1; k--)
-						   player[k + 1][0][i] = player[k][0][i];
-				   }
-				   player[0][row][line] =' ';
-				   line+=1;
-				   player[0][row][line] ='@';
-
-			   }
-			   break;
-
-		case 'h' : {
-				   if(player[0][row][line-1] == '#')
-					   break;
-				   if(player[0][row][line-1] == '$')
-				   {
-					   if(player[0][row][line-2] == '#' || player[0][row][line-2] == '$')
-						   break;
-					   for(int i = 0; i <= box_row * box_line - 2; i++){
-						   for(int k = 4; k > -1; k--)
-							   player[k + 1][0][i] = player[k][0][i];
-					   }
-					   line -= 1;
-					   player[0][row][line+1] = ' ';
-					   player[0][row][line] = '@';
-					   player[0][row][line-1] = '$';
-					   break;
-				   }
-				   for(int i = 0; i <= box_row * box_line - 2; i++){
-					   for(int k = 4; k > -1; k--)
-						   player[k + 1][0][i] = player[k][0][i];
-				   }
-				   player[0][row][line] =' ';
-				   line-=1;
-				   player[0][row][line] ='@';
-			   }
-			   break;
-
-
-		case 'k' : {
-				   if(player[0][row-1][line] == '#')
-					   break;
-				   if(player[0][row-1][line] == '$')
-				   {
-					   if(player[0][row-2][line] == '#' || player[0][row-2][line] == '$')
-						   break;
-					   for(int i = 0; i <= box_row * box_line - 2; i++){
-						   for(int k = 4; k > -1; k--)
-							   player[k + 1][0][i] = player[k][0][i];
-					   }
-					   row -= 1;
-					   player[0][row+1][line] = ' ';
-					   player[0][row][line] = '@';
-					   player[0][row-1][line] = '$';
-					   break;
-				   }
-				   for(int i = 0; i <= box_row * box_line - 2; i++){
-					   for(int k = 4; k > -1; k--)
-						   player[k + 1][0][i] = player[k][0][i];
-				   }
-				   player[0][row][line] =' ';
-				   row-=1;
-				   player[0][row][line] ='@';
-			   }
-			   break;
-
-		case 'j' : {
-				   if(player[0][row+1][line] == '#')
-					   break;
-				   if(player[0][row+1][line] == '$')
-				   {
-					   if(player[0][row+2][line] == '#' || player[0][row+2][line] == '$')
-						   break;
-					   for(int i = 0; i <= box_row * box_line - 2; i++){
-						   for(int k = 4; k > -1; k--)
-							   player[k + 1][0][i] = player[k][0][i];
-					   }
-					   row += 1;
-					   player[0][row-1][line] = ' ';
-					   player[0][row][line] = '@';
-					   player[0][row+1][line] = '$';
-					   break;
-				   }
-				   for(int i = 0; i <= box_row * box_line - 2; i++){
-					   for(int k = 4; k > -1; k--)
-						   player[k + 1][0][i] = player[k][0][i];
-				   }
-				   player[0][row][line] =' ';
-				   row+=1;
-				   player[0][row][line] ='@';
-			   }
-			   break;
-
-			    case 's' :{
-			      FILE *sfp;
-			      sfp = fopen("sokoban.txt", "w");
-			      printf("l \n");
-			      sleep(1);
-			      printf("파일을 저장했습니다\n");
-			      sleep(1);
-			      for (int ho=0; ho<=box_line*box_row; ho++){
-			         fprintf(sfp,"%c", player[0][0][ho]);
-			      }
-			      fclose(sfp);
-			      break;
-			    }
-
-
-		case 'f' : {
-				   printf("f \n");
-				   sleep(1);
-				   printf("저장된 파일을 불러오겠습니다\n");
-				   sleep(1);
-					 system("clear");
-				   map_load(1);
-				   map_memorize(player);
-				   map_display(player);
-				   break;
-			   }
-		case 'n': {// 새로히 게임을 실행할 수 있게하는 case이며 undo의 가능횟수를 초기화 하고 main함수에서 새로히 재귀함수의 개념으로 게임이 실행되도록 하기위해 간접적으로
+int move(void) {//@의 행동을 총괄하는 함수이며 커맨드를 입력받은 후 switch를 통해 원하는 기능으로 제어가 넘어가도록 한다.
+   input_char = getch();// getch를 사용하여 키보드로 input_char에 문자를 입력받음.
+   switch (input_char) {
+      case 'u' : {//undo의 역할을 하는 case이며 shadow를 거꾸로 실행한다고 생각하면 쉽다, 배열을 거꾸로 배정하여 이전의 위치로 돌아갈 수 있도록 만든다.
+               if(before < 5){
+                  for(int i = 0; i <= 30*30-1; i++){
+                     for(int k = 0; k <= 4; k++)
+                        player[k][0][i] = player[k + 1][0][i];
+                  }
+                  for(int i = 0; i <=29; i++){
+                     for(int j = 0; j <=29; j++){
+                        if(player[0][i][j] == '@'){
+                           row = i;
+                           line = j;
+                           break;
+                        }
+                     }
+                  }
+                  before++;
+               }
+            }
+            break;
+            case 'n': {// 새로히 게임을 실행할 수 있게하는 case이며 undo의 가능횟수를 초기화 하고 main함수에서 새로히 재귀함수의 개념으로 게임이 실행되도록 하기위해 간접적으로
               //변수(new_count)를 조절하는 방법을 취했다
                printf("n\n");
                sleep(1);
@@ -421,24 +260,161 @@ int move(char player[6][box_row][box_line]) {
                sleep(1);
                break;
             }
+      case 'd':{//도움말을 보여주는 case이며 printf함수를 이용하여 커맨드의 역할을 제시하였다, getch()를 통해 도움말에서 벗어날 수
+        //있도록 만들었다.
+             printf("k \n");
+             printf("도움말을 보여줍니다 \n");
+             sleep(1);
+             system("clear");
+             printf("\n\n\n\nh(왼쪽), j(아래), k(위), l(오른쪽)\n");
+             printf("u(undo)\n");
+             printf("r(replay)\n");
+             printf("n(new)\n");
+             printf("e(exit)\n");
+             printf("s(save)\n");
+             printf("f(file load)\n");
+             printf("d(display help)\n");
+             printf("t(top)\n\n\n\n\n\n");
+             printf("맵으로 돌아가실거면 아무키나 눌러주세요\n");
+             getch();
+             system("clear") ;
+             map_display(player);
+          }
+          break;
+      case 'l' : {//case 'l', case'k', case'j', case'h'는 상하좌우로 이동하게하는 기능이며 제어구문을 통해 장애물에 맞닥뜨릴때의 경우에 따라 움직일 수 없게 break를 두었다.
+        //그리고 움직임으로 인해 배열에 변화를 처리 하기 위해 움직임이 반영될 수 있는 경우에 shadow함수를 먼저 두어 undo를 위해
+        //현재의 상태를 다른 배열에 저장해 두고 배열을 바꾸었다.
+               if(player[0][row][line+1] == '#') //플레이어가 이동해야할 좌표가 벽이라면 움직이지 않음.
+                  break;
+               if(player[0][row][line+1] == '$')//플레이어가 이동해야할 좌표에 박스있는경우
+               {
+                  if(player[0][row][line+2] == '#' || player[0][row][line+2] == '$')//플레이어가 상자를 밀었을때 상자의 위치에 벽이나 상자가 있으면 플레이어와 상자 모두 움직이지 않음.
+                     break;
+                  shadow();
+                  line += 1;
+                  player[0][row][line-1] = ' ';
+                  player[0][row][line] = '@';
+                  player[0][row][line+1] = '$';
+                  break;
+               }
+               shadow();
+               player[0][row][line] =' ';
+               line+=1;
+               player[0][row][line] ='@';
 
-		case 'r' : {
-				   printf("r\n");
-				   sleep(1);
-				   printf("처음부터 다시 시작합니다\n");
-				   sleep(1);
-				   line=0 ,row=0, box_line=1 ,box_row=1, count=0, Ocount = -1;
-				   for(int i=0; i<=19; i++)
-					   O[i] = 0;
-				   map_load(0);
-				   map_memorize(player);
-				   system("clear");
-				   map_display(player);
-				   break;
-			   }
-		default : break;
-	}
-	return 0;
+            }
+            break;
+
+      case 'h' : {
+               if(player[0][row][line-1] == '#')//플레이어가 이동해야할 좌표가 벽이라면 움직이지 않음.
+                  break;
+               if(player[0][row][line-1] == '$')//플레이어가 이동해야할 좌표에 박스있는경우
+               {
+                  if(player[0][row][line-2] == '#' || player[0][row][line-2] == '$')//플레이어가 상자를 밀었을때 상자의 위치에 벽이나 상자가 있으면 플레이어와 상자 모두 움직이지 않음.
+                     break;
+                   shadow();
+                  line -= 1;
+                  player[0][row][line+1] = ' ';
+                  player[0][row][line] = '@';
+                  player[0][row][line-1] = '$';
+                  break;
+               }
+               shadow();
+               player[0][row][line] =' ';
+               line-=1;
+               player[0][row][line] ='@';
+            }
+            break;
+      case 'k' : {
+               if(player[0][row-1][line] == '#')//플레이어가 이동해야할 좌표가 벽이라면 움직이지 않음.
+                  break;
+               if(player[0][row-1][line] == '$')//플레이어가 이동해야할 좌표에 박스있는경우
+               {
+                  if(player[0][row-2][line] == '#' || player[0][row-2][line] == '$')//플레이어가 상자를 밀었을때 상자의 위치에 벽이나 상자가 있으면 플레이어와 상자 모두 움직이지 않음.
+                     break;
+                   shadow();
+                  row -= 1;
+                  player[0][row+1][line] = ' ';
+                  player[0][row][line] = '@';
+                  player[0][row-1][line] = '$';
+                  break;
+               }
+               shadow();
+               player[0][row][line] =' ';
+               row-=1;
+               player[0][row][line] ='@';
+            }
+            break;
+
+      case 'j' : {
+               if(player[0][row+1][line] == '#')//플레이어가 이동해야할 좌표가 벽이라면 움직이지 않음.
+                  break;
+               if(player[0][row+1][line] == '$')//플레이어가 이동해야할 좌표에 박스있는경우
+               {
+                  if(player[0][row+2][line] == '#' || player[0][row+2][line] == '$')//플레이어가 상자를 밀었을때 상자의 위치에 벽이나 상자가 있으면 플레이어와 상자 모두 움직이지 않음.
+                     break;
+                  shadow();
+                  row += 1;
+                  player[0][row-1][line] = ' ';
+                  player[0][row][line] = '@';
+                  player[0][row+1][line] = '$';
+                  break;
+               }
+               shadow();
+               player[0][row][line] =' ';
+               row+=1;
+               player[0][row][line] ='@';
+            }
+            break;
+             case 's' :{
+               FILE *sfp;
+               sfp = fopen("sokoban.txt", "w");//sokoban 파일을 쓰기전용으로 열어줌.
+               printf("s \n");
+               sleep(1);
+               printf("파일을 저장했습니다\n");
+               sleep(1);
+               fprintf(sfp, "%d\n", maporder);
+               for (int ho=0; ho<=30*30; ho++){
+                 if (player[0][0][ho] != 0){
+                  fprintf(sfp,"%c", player[0][0][ho]);
+               }
+             }
+               fclose(sfp);
+               s_count++;
+               break;
+             }
+      case 'f' : {//파일을 불러오는 기능이며 map_load라는 함수에서 다른 값을 집어넣어 저장된 배열을 불러올 수 있게 만들었다.
+               printf("f \n");
+               sleep(1);
+               printf("저장된 파일을 불러오겠습니다\n");
+               sleep(1);
+                system("clear");
+               map_load(0);
+               map_display();
+               break;
+            }
+
+      case 'r' : {//현재의 스테이지에서 처음부터 새로 하기위해 위치를 초기화 하였다.
+        //case'n'과 다른 점은 진행중인 스테이지만 초기화 하면 되기 때문에 현재 불러온 배열만 초기화 한 후 에 map_display를 사용하면 되었다.
+               printf("r\n");
+               sleep(1);
+               printf("처음부터 다시 시작합니다\n");
+               sleep(1);
+               line=0 ,row=0, Ocount = -1;
+               for(int i=0; i<=19; i++)
+                  O[i] = 0;
+               map_load(maporder);
+               system("clear");
+               map_display();
+               break;
+            }
+            case 'v' : {//다음 스테이지로 넘어가게하는 case이며 가장 아래에 위치해 있기 때문에 break를 따로 두지 않았다.
+              //다음 맵으로 이동하게 Ocount를 -1 로초기화 하였다.
+              Ocount = -1;
+            }
+      default : break;
+   }
+   return 0;
 }
 
 
