@@ -10,9 +10,11 @@ int s_count = 0, new_count = 0, name_count = 0, name[10] = {0}, mcount = 0, befo
 //name_count는 이름을 입력받기위한 조건문을 위해 사용되는 변수이다. before은 undo를 하기위한 변수이다.
 //line과 row는플레이어인 @의 위치를 나타내는 변수이다.
 //name[10]은 이름을 받는 배열이고 10자만 받게 크기를 설정 하였다.
-//mcount 변수는 map.txt 파일 안의 map 문자 중 m 까지 읽기 위해 지정한 변수//dolcount는 빈 공간에 들어가 있는 박스 개수를 뜻한다.
-//maporder는 맵의 순서를 지정하기 위한 변수 이다.//O[20]은 빈 공간의 위치를 알려주기 위한 배열이고 Ocount는 빈 공간의 개수를 뜻하는 변수이다. Ocount가 0이 되면 스테이지를 클리어 한것이 된다.
-
+//mcount 변수는 map.txt 파일 안의 map 문자 중 m 까지 읽기 위해 지정한 변수
+//dolcount는 빈 공간에 들어가 있는 박스 개수를 뜻한다.
+//maporder는 맵의 순서를 지정하기 위한 변수 이다.//O[20]은 빈 공간의 위치를 알려주기 위한 배열이고 Ocount는 빈 공간의 개수를 뜻하는 변수이다. 
+//Ocount가 0이 되면 스테이지를 클리어 한것이 된다.
+//O[20]은 빈 공간의 위치를 알려주기 위한 배열이고 Ocount는 빈 공간의 개수를 뜻하는 변수이다. Ocount가 0이 되면 스테이지를 클리어 한것이 된다.
 void name_put(void){//name_count가 0일때는 처음 이름을 입력받게 한다. 그다음 name_count가 1이 되면 입력을 받지 못하게 한다. 
 	if(name_count == 0){   
 		name_count++;  
@@ -194,6 +196,15 @@ void map_display(){//게임의 진행 현황을 표시하는 함수이며 기본
    }
    printf("\n");
 }
+
+void shadow(void){//undo를 위한 함수이며 이동할 때 마다 이전 배열이 저장되어 배정할 수 있게 한다.
+  for(int i = 0; i <= 30 *30 - 1; i++){
+     for(int k = 4; k > -1; k--)
+        player[k + 1][0][i] = player[k][0][i];
+  }
+}
+
+
 
 
 int move(char player[6][box_row][box_line]) {
@@ -379,6 +390,37 @@ int move(char player[6][box_row][box_line]) {
 				   map_display(player);
 				   break;
 			   }
+		case 'n': {// 새로히 게임을 실행할 수 있게하는 case이며 undo의 가능횟수를 초기화 하고 main함수에서 새로히 재귀함수의 개념으로 게임이 실행되도록 하기위해 간접적으로
+              //변수(new_count)를 조절하는 방법을 취했다
+               printf("n\n");
+               sleep(1);
+               printf("1단계 맵부터 다시 시작합니다\n");
+               sleep(1);
+               new_count++;
+               maporder = 1, before = 0, line = 0, row = 0, count = 0, Ocount = -1;
+               for (int i = 0; i <= 19; i++)
+                  O[i] = 0;
+               break;
+            }
+            case 'e': {// 게임을 종료하는 기능으로 저장이 안되어 있다면 종료를 할 수 없게 s_count라는 변수를 두어 제어하였다.
+               printf("e\n");
+               sleep(1);
+               if (s_count >= 1) {
+                  printf("SEE YOU...  ");
+                  for(int i = 0; i <= 9; i++){
+                    if(name[i] == 0)
+                      printf("");
+                    else
+                        printf("%c",name[i]);
+                  }
+                  sleep(1);
+                  exit(1);
+               }
+               if (s_count == 0)
+                  printf("저장하고 종료해주세요\n");
+               sleep(1);
+               break;
+            }
 
 		case 'r' : {
 				   printf("r\n");
@@ -398,6 +440,7 @@ int move(char player[6][box_row][box_line]) {
 	}
 	return 0;
 }
+
 
 
 
