@@ -199,7 +199,7 @@ void map_display(){//게임의 진행 현황을 표시하는 함수이며 기본
 int move(char player[6][box_row][box_line]) {
 	input_char = getch();
 	switch (input_char) {
-		case 'u' : {
+		case 'u' : {//undo의 역할을 하는 case이며 shadow를 거꾸로 실행한다고 생각하면 쉽다, 배열을 거꾸로 배정하여 이전의 위치로 돌아갈 수 있도록 만든다.
 				   if(before < 5){
 					   for(int i = 0; i <= box_row * box_line - 2; i++){
 						   for(int k = 0; k <= 4; k++)
@@ -224,12 +224,12 @@ int move(char player[6][box_row][box_line]) {
 				 printf("도움말을 보여줍니다 \n");
 				 sleep(1);
 				 system("clear");
-				 printf("\n\n\n\na(왼쪽), s(아래), w(위), d(오른쪽)\n");
+				 printf("\n\n\n\nh(왼쪽), k(아래), j(위), l(오른쪽)\n");
 				 printf("u(undo)\n");
 				 printf("r(replay)\n");
 				 printf("n(new)\n");
 				 printf("e(exit)\n");
-				 printf("l(save)\n");
+				 printf("s(save)\n");
 				 printf("f(file load)\n");
 				 printf("k(display help)\n");
 				 printf("t(top)\n\n\n\n\n\n");
@@ -243,7 +243,7 @@ int move(char player[6][box_row][box_line]) {
 			 }
 			 break;
 
-		case 'd' : {
+		case 'l' : {
 				   if(player[0][row][line+1] == '#')
 					   break;
 				   if(player[0][row][line+1] == '$')
@@ -271,7 +271,7 @@ int move(char player[6][box_row][box_line]) {
 			   }
 			   break;
 
-		case 'a' : {
+		case 'h' : {
 				   if(player[0][row][line-1] == '#')
 					   break;
 				   if(player[0][row][line-1] == '$')
@@ -299,7 +299,7 @@ int move(char player[6][box_row][box_line]) {
 			   break;
 
 
-		case 'w' : {
+		case 'k' : {
 				   if(player[0][row-1][line] == '#')
 					   break;
 				   if(player[0][row-1][line] == '$')
@@ -326,7 +326,7 @@ int move(char player[6][box_row][box_line]) {
 			   }
 			   break;
 
-		case 's' : {
+		case 'j' : {
 				   if(player[0][row+1][line] == '#')
 					   break;
 				   if(player[0][row+1][line] == '$')
@@ -353,7 +353,7 @@ int move(char player[6][box_row][box_line]) {
 			   }
 			   break;
 
-			    case 'l' :{
+			    case 's' :{
 			      FILE *sfp;
 			      sfp = fopen("sokoban.txt", "w");
 			      printf("l \n");
@@ -401,28 +401,32 @@ int move(char player[6][box_row][box_line]) {
 
 
 
-
 int main(void)
 {
-	system("clear");
-	map_load(0);
-	char player[6][box_row][box_line];
-	map_memorize(player);
-	map_display(player);
-	while (1){
-		move (player);
-		system("clear");
-		dolcount = -1;      //O도 0부터 셌기 때문에 $ 도 0부터 세기 위해
-		for(int n=0;n<=Ocount;n++){
-			if(player[0][0][O[n]] == ' ' || player[0][0][O[n]] == 0)
-				player[0][0][O[n]] = 'O';
-			if(player[0][0][O[n]] == '$')
-				dolcount++;
-		}
-		system("clear");
-		map_display(player);
-		if(dolcount == Ocount)
-			printf("다음 스테이지로 넘어갑니다."); // 이 부분에서 맵이 넘어감. 추가할 부분
-	}
-	return 0;
+  system("clear");
+   name_put();
+   map_load(maporder);
+   map_display();
+   while (1){
+      move ();
+      if (new_count == 1) {//move함수에서 case'n'을 위해서
+         new_count--;
+         main();
+      }
+      dolcount = -1;      //O도 0부터 셌기 때문에 $ 도 0부터 세기 위해
+      for(int n=0;n<=Ocount;n++){
+         if(player[0][0][O[n]] == ' ' || player[0][0][O[n]] == 0)
+            player[0][0][O[n]] = 'O';
+         if(player[0][0][O[n]] == '$')
+            dolcount++;
+      }
+      map_display();
+      if(dolcount == Ocount){
+         printf("\n다음 스테이지로 넘어갑니다.\n"); // 이 부분에서 맵이 넘어감. 추가할 부분
+         sleep(1);
+         maporder++;
+         main();
+       }
+   }
+   return 0;
 }
