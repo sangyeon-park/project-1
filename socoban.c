@@ -443,4 +443,31 @@ int main(void)
 		}
 	}
 	return 0;
+=======
+  system("clear");
+   name_put();
+   map_load(maporder);
+   map_display();
+   while (1){
+      move ();
+      if (new_count == 1) {//move함수에서 case'n'을 위해서
+         new_count--;
+         main();
+      }
+      dolcount = -1;//O도 0부터 셌기 때문에 $ 도 0부터 세기 위해
+      for(int n=0;n<=Ocount;n++){
+         if(player[0][0][O[n]] == ' ' || player[0][0][O[n]] == 0)
+            player[0][0][O[n]] = 'O';
+         if(player[0][0][O[n]] == '$')
+            dolcount++;
+      }
+      map_display();
+      if(dolcount == Ocount){
+         printf("\n다음 스테이지로 넘어갑니다.\n"); // 이 부분에서 맵이 넘어감. 추가할 부분
+         sleep(1);
+         maporder++;
+         main();
+       }
+   }
+   return 0;
 }
