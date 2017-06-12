@@ -4,15 +4,40 @@
 #include <unistd.h>
 #include <time.h>
 
+char player[6][30][30], c, input_char;
+int s_count = 0, new_count = 0, name_count = 0, name[10] = {0}, mcount = 0, before = 0,line=0 ,row=0, count=0, Ocount = -1, O[20] = {0}, dolcount=-1, maporder=1, end = 0;
+// s_count는 e를 눌러 종료시킬때 저장이되어있으면 종료되도록 이용하는 변수이다. new_count는 n을 눌러 맵을처음부터 하도록 이용하는 변수이다.
+//name_count는 이름을 입력받기위한 조건문을 위해 사용되는 변수이다. before은 undo를 하기위한 변수이다.
+//line과 row는플레이어인 @의 위치를 나타내는 변수이다.
+//name[10]은 이름을 받는 배열이고 10자만 받게 크기를 설정 하였다.
+//mcount 변수는 map.txt 파일 안의 map 문자 중 m 까지 읽기 위해 지정한 변수//dolcount는 빈 공간에 들어가 있는 박스 개수를 뜻한다.
+//maporder는 맵의 순서를 지정하기 위한 변수 이다.//O[20]은 빈 공간의 위치를 알려주기 위한 배열이고 Ocount는 빈 공간의 개수를 뜻하는 변수이다. Ocount가 0이 되면 스테이지를 클리어 한것이 된다.
 
+void name_put(void){//name_count가 0일때는 처음 이름을 입력받게 한다. 그다음 name_count가 1이 되면 입력을 받지 못하게 한다. 
+	if(name_count == 0){   
+		name_count++;  
+		printf("Starting...\n");  
+		sleep(1);  
+		printf("input name:");  
+		for (int i=0; i<=9; i++){     
+			name[i] = getchar();// 이름을 입력받아 name배열에 저장      
+			if (name[i] == 8){               
+				name[i-1] = 0;              
+				i-2;}     
+			if (name[i] == '\n')              
+				break; 
+		} 
+		printf("Hello ");  
+		for(int i = 0; i <= 9; i++){  
+			if(name[i] == 0)     
+				printf("");   
+			else       
+				printf("%c",name[i]);
+		}  sleep(1);
+	}
+}
 
-char memorize[6][30][30], c, input_char;
-int before = 0,line=0 ,row=0, box_line=1 ,box_row=1, count=0, Ocount = -1, O[20] = {0}, dolcount=-1;
-time_t start, end;
-
-
-
-int getch(void){
+int getch(void){//커맨드가 아래에서 글자가 보이지 않도록 하는 함수이다.
 	int ch;
 	struct termios buf;
 	struct termios save;
@@ -27,6 +52,26 @@ int getch(void){
 	return ch;
 }
 
+void shadow(void){//undo를 위한 함수이며 이동할 때 마다 이전 배열이 저장되어 배정할 수 있게 한다. 
+	for(int i = 0; i <= 30 *30 - 1; i++){    
+		for(int k = 4; k > -1; k--)      
+			player[k + 1][0][i] = player[k][0][i]; 
+	}
+}
+
+void finderror(){//박스의 개수와 보관장소의 개수가 같은지 확인하고 아니면 종료하는 함수이다.   
+	int checkO = 0, checkdol = 0; // O의 개수와 dollar의 개수를 확인하기 위한 변수를 선언했으며, 0으로 초기화했다. 
+	for(int i = 0 ; i < 30 ; i++)   //맵을 읽은 후 O의 개수와 $의 개수를 확인한다.    
+		for(int j = 0 ; j < 30 ; j++){      
+			if(player[0][i][j] == 'O')          
+				checkO++;       
+			if(player[0][i][j] == '$')          
+				checkdol++;  
+		}
+  if(checkO != checkdol){  // $와 O가 같지 않으면 다음을 출력하고 종료한다.  
+	  printf("보관장소와 박스의 개수가 일치하지 않습니다(오류)");  exit(1);
+  }
+}
 
 
 void map_load(int a){
