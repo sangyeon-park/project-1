@@ -76,18 +76,6 @@ void finderror(){//박스의 개수와 보관장소의 개수가 같은지 확�
 }
 
 
-
-
-
-void map_memorize(char player[6][box_row][box_line]){
-	for (int i=0 ; i<=box_row * box_line - 2 ; i++)
-		player[0][0][i] = memorize [0][0][i];
-		for (int k=0; k<=4; k++){
-		for(int i = 0; i <= box_row * box_line-2; i++)
-			player[k+1][0][i] = player[k][0][i];
-}
-}
-
 void map_load(int a){//map파일을 읽게 하는 함수이며 map_display라는 함수에서 출력하기 위한 배열을 배정한다.
    char letter;
    FILE *fp1;
