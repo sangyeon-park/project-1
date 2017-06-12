@@ -74,35 +74,7 @@ void finderror(){//박스의 개수와 보관장소의 개수가 같은지 확�
 }
 
 
-void map_load(int a){
-	char letter;
-	FILE *fp1;
-	if (a == 0)
-		fp1 = fopen("jong.txt", "r");
-		if (a==1){
-			before = 0,line=0 ,row=0, box_line=1 ,box_row=1, count=0, Ocount = -1, dolcount=-1;
-			for (int i =0; i<=19; i++)
-			O[i] = 0;
-			fp1 = fopen("sokoban.txt", "r");}
 
-	while ((letter = getc(fp1)) != EOF){
-		memorize[0][0][count]=letter;
-		count++;
-		if (letter == '\n')
-			++box_row;
-		if (box_row==1 )
-			++box_line;
-		if (letter=='@'){
-			row = box_row-1;
-			line = (count+1) % box_line-2;
-		}
-		if (letter == 'O'){
-			Ocount++;
-			O[Ocount] = count-1;
-		}
-	}
-	fclose(fp1);
-}
 
 
 void map_memorize(char player[6][box_row][box_line]){
@@ -114,21 +86,114 @@ void map_memorize(char player[6][box_row][box_line]){
 }
 }
 
-
-
-void map_display(char player[6][box_row][box_line]){
-	system("clear");
-	for(int i=0;i <= box_row * box_line - 2;i++){
-		if (player[0][0][i] == 0)
-			printf("");
-		else
-			printf("%c", player[0][0][i]);
-	}
-	printf("%d %d %d %d", row, line, box_row, box_line);
-	printf("\n");
-	return;
+void map_load(int a){//map파일을 읽게 하는 함수이며 map_display라는 함수에서 출력하기 위한 배열을 배정한다.
+   char letter;
+   FILE *fp1;
+   int mapcheck = a;
+   int x = 0,y =0;
+   mcount = 0;
+   if(a == 0){//a가 0이라면 저장된파일을 불러옴.
+     before = 0, line = 0, row = 0, count = 0, Ocount = -1, dolcount = -1;
+     for(int i = 0; i<20; i++)
+      O[i] = 0;
+     fp1 = fopen("sokoban.txt", "r");//sokoban파일을 읽기 전용으로 열어줌.
+     mapcheck = maporder;
+   }
+   else
+      fp1 = fopen("map.txt", "r");//map파일을 읽기 전용으로 열어줌.
+      // letter = getc(fp1);
+      // player[0][0][0] =letter;
+  if (a==0){
+    for (int i = 0; i<30*30; i++)
+    player[0][0][i] = 0;
+    while ((letter = getc(fp1)) != EOF){//fp1으로 읽어들인 문자가 파일의 끝이 아닐때까지 반복함.
+      player[0][y][x] = letter;
+    if (player[0][y][x] == '@'){
+      row=y, line=x;
+    }
+    if (letter == 'O'){
+       Ocount++;
+       O[Ocount] = 30*y + x;
+       }
+       if (player[0][y][x] == '\n'){
+         y++;
+         x=0;
+       }
+         else
+              x++;
+  }
+for(int k = 0; k < 5; k++){
+ for(int i = 0; i < 30 * 30 - 1; i++)
+    player[k + 1][0][i] = player[k][0][i];
+  }
 }
+  else{
+     while ((letter = getc(fp1)) != EOF){
+       if(letter == 'm'){
+             mcount++;
+             if(mcount == a+1)
+                break;
+             continue;
+          }
+          if(letter == 'a')
+             continue;
+          if(letter == 'e'){
+             end++;
+             break;
+          }
 
+       player[0][y][x] = letter;
+
+       if(player [0][y][x] == 'p'){
+             x = 0, y = 0, Ocount = -1;
+             for(int i = 0; i < 20; i++)
+                O[i] = 0;
+             for(int i = 0; i < 30 * 30; i++)
+                player[0][0][i] = 0;
+             continue;
+          }
+
+     if (player[0][y][x] == '@'){
+       row=y, line=x;
+     }
+
+        if (letter == 'O'){
+           Ocount++;
+           O[Ocount] = 30*y + x;
+           }
+           if (player[0][y][x] == '\n'){
+             y++;
+             x=0;
+           }
+             else
+                          x++;
+     }
+     for(int k = 0; k < 5; k++){
+      for(int i = 0; i < 30 * 30 - 1; i++)
+         player[k + 1][0][i] = player[k][0][i];
+       }
+     fclose(fp1);
+   }
+ }
+
+void map_display(){//게임의 진행 현황을 표시하는 함수이며 기본적인 배열은 player[0]을 사용한다.
+   system("clear");
+   printf("hello  ");
+   for(int i = 0; i <= 9; i++){
+     if(name[i] == 0)
+       printf(" ");
+     else
+         printf("%c",name[i]);//입력받은 이름을 출력시키기 위해서 반복문을 사용함
+   }
+   printf("\n\n");
+   for (int y = 0; y< 30; y++ ){
+     for (int x=0; x< 30; x++){
+       if (player[0][y][x] != 0)
+       printf ("%c", player[0][y][x]);
+     }
+   }
+   printf("\n");
+}
 
 
 int move(char player[6][box_row][box_line]) {
